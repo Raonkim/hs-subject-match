@@ -1,0 +1,51 @@
+name: schools
+
+# 학교별 운영 과목을 NEIS 시간표에서 다시 모은다. 학기 표본 기간이 끝난 뒤(5월·10월) 돌고, 손으로도 돌릴 수 있다.
+on:
+  schedule:
+    - cron: '23 18 1 5,10 *'
+  workflow_dispatch:
+    inputs:
+      region:
+        description: '교육청 코드만 (예: B10). 비우면 전국'
+        required: false
+      limit:
+        description: '최대 학교 수 (0 = 제한 없음)'
+        required: false
+        default: '0'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: schools
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Test
+        run: node --test
+
+      - name: Collect timetables
+        env:
+          NEIS_API_KEY: ${{ secrets.NEIS_API_KEY }}
+          REGION: ${{ github.event.inputs.region }}
+          LIMIT: ${{ github.event.inputs.limit || '0' }}
+        run: |
+          ARGS=(--limit "$LIMIT")  # 학년도는 스크립트가 날짜로 정한다(1~4월 중순은 지난 학년도)
+          if [ -n "$REGION" ]; then ARGS+=(--region "$REGION"); fi
+          node tools/build_schools.mjs "${ARGS[@]}"
+
+      - name: Commit
+        run: |
+          git config user.name "data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/schools
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "data: schools $(date -u +%Y-%m-%d)"
+          git pull --rebase --quiet && git push --quiet

@@ -1,0 +1,6 @@
+{
+  "name": "subject-match",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test", "build": "node tools/build_site.mjs" }
+}

@@ -1,0 +1,36 @@
+:root {
+  --bg: #ffffff; --fg: #1b1f24; --muted: #5b636e; --line: #d9dee4; --accent: #2357d9;
+  --ok: #1d7a46; --okbg: #edf7f1; --warnbg: #fff6e5; --warn: #7a4a00; --callout: #f2f5fb; --unseen: #8a5a00;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #14171b; --fg: #e8ebef; --muted: #9aa3ad; --line: #2c323a; --accent: #7ea2ff;
+    --ok: #5cc98b; --okbg: #15291f; --warnbg: #2b2213; --warn: #f0c27a; --callout: #1d222a; --unseen: #f0b35a; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.6 system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 1.6rem; margin: 0 0 8px; }
+h2 { font-size: 1.2rem; margin: 32px 0 8px; border-top: 1px solid var(--line); padding-top: 24px; }
+h3 { font-size: 1rem; margin: 0 0 8px; }
+.lede, .note, footer, .notes { color: var(--muted); }
+.note { font-size: .9rem; }
+.warn { background: var(--warnbg); color: var(--warn); padding: 10px 12px; border-radius: 8px; font-size: .92rem; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+label { display: grid; gap: 4px; font-weight: 600; margin-bottom: 12px; }
+input, select { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); width: 100%; }
+input:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.callout { background: var(--callout); padding: 12px; border-radius: 8px; font-weight: 600; }
+.rule { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 12px 0; }
+.rule.ok { border-color: var(--ok); background: var(--okbg); }
+.subjects { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.subjects li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.subjects label { display: flex; align-items: center; gap: 8px; margin: 0; font-weight: 500; }
+.subjects input { width: 20px; height: 20px; }
+.tag { font-size: .8rem; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; }
+.tag.offered { color: var(--ok); }
+.tag.unseen { color: var(--unseen); }
+.raw { margin: 12px 0; font-size: .92rem; color: var(--muted); }
+a { color: var(--accent); }
+footer { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 16px; font-size: .9rem; }

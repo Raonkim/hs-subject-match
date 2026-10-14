@@ -1,0 +1,44 @@
+[
+ {
+  "key": "khu",
+  "university": "경희대학교",
+  "majors": 37,
+  "basis_date": "2026-02-20"
+ },
+ {
+  "key": "korea",
+  "university": "고려대학교",
+  "majors": 32,
+  "basis_date": "2026-02-20"
+ },
+ {
+  "key": "pnu",
+  "university": "부산대학교",
+  "majors": 52,
+  "basis_date": "2026-02-20"
+ },
+ {
+  "key": "snu",
+  "university": "서울대학교",
+  "majors": 39,
+  "basis_date": "2026-02-20"
+ },
+ {
+  "key": "yonsei",
+  "university": "연세대학교",
+  "majors": 33,
+  "basis_date": "2026-04"
+ },
+ {
+  "key": "cau",
+  "university": "중앙대학교",
+  "majors": 24,
+  "basis_date": "2026-02-20"
+ },
+ {
+  "key": "hanyang",
+  "university": "한양대학교(서울)",
+  "majors": 1,
+  "basis_date": "2026-02-20"
+ }
+]

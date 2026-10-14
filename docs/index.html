@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>권장과목 맞춰보기</title>
+  <meta name="description" content="가고 싶은 학과의 2028 대입 권장과목과 우리 학교에서 운영한 과목을 맞춰 봅니다.">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>권장과목 맞춰보기</h1>
+    <p class="lede">가고 싶은 학과가 권하는 고등학교 과목을 보고, 우리 학교 시간표에 나온 과목과 내가 들었거나 들을 과목을 체크해 봅니다.
+      아무 정보도 저장하거나 보내지 않습니다.</p>
+    <p class="warn">권장과목은 지원 자격이 아닙니다. 일부 대학은 학교에 개설되지 않아 듣지 못한 경우를 구분해 평가한다고 밝혔습니다(예: <a href="https://www2.yonsei.ac.kr/entrance/plan/2028_guide.pdf" rel="noopener noreferrer">연세대 2028 가이드라인</a>).
+      최종 판단은 대학 모집요강과 입학처 공지로 하세요.</p>
+  </header>
+
+  <section aria-labelledby="s1">
+    <h2 id="s1">1. 대학과 학과</h2>
+    <div class="row">
+      <label>대학 <select id="univ"><option value="">불러오는 중…</option></select></label>
+      <label>학과 찾기 <input id="major-q" type="search" placeholder="예: 컴퓨터, 의예, 화학" autocomplete="off"></label>
+    </div>
+    <label>학과 <select id="major" size="6"></select></label>
+    <p class="note">현재 서울대·연세대·고려대·경희대·중앙대·부산대·한양대의 자연·공학·의약 계열만 담았습니다. 인문계열은 대부분 권장과목을 따로 두지 않습니다.</p>
+  </section>
+
+  <section aria-labelledby="s2">
+    <h2 id="s2">2. 우리 학교 (선택)</h2>
+    <label>학교 이름 <input id="school-q" type="search" placeholder="예: 가락고" autocomplete="off" list="school-list"></label>
+    <datalist id="school-list"></datalist>
+    <p id="school-info" class="note">학교를 고르면 올해 시간표에 나온 과목을 표시합니다.</p>
+  </section>
+
+  <section id="result" hidden aria-labelledby="s3">
+    <h2 id="s3">3. 권장과목 체크</h2>
+    <p id="summary" class="callout" aria-live="polite"></p>
+    <p id="caution" class="warn" hidden></p>
+    <div id="rules"></div>
+    <details class="raw">
+      <summary>대학 원문 문구와 해석 메모</summary>
+      <p id="raw"></p>
+      <p id="note"></p>
+    </details>
+    <p id="source" class="note"></p>
+  </section>
+
+  <section aria-labelledby="s4">
+    <h2 id="s4">알아 둘 것</h2>
+    <ul class="notes">
+      <li>'운영 확인'은 올해 표본 기간(1학기 4월 중순, 2학기 9월 중순 각 2주) 시간표에 그 과목이 나왔다는 뜻입니다. 2015 개정 교육과정을 배우는 학년(2026학년도 고3)의 시간표는 과목명이 겹쳐 세지 않습니다.</li>
+      <li>선택과목은 시간표에 일부만 보일 수 있습니다. '확인 안 됨'은 '개설 안 됨'과 다릅니다.</li>
+      <li>아직 오지 않은 학기(특히 3학년)에 열릴 과목은 학교 교육과정 편제표에서 확인하세요(학교알리미 공시).</li>
+      <li>학교에 없는 과목은 교육청 공동교육과정이나 온라인학교로 들을 수 있는 경우가 있습니다.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>공공데이터로 만든 비공식 도구입니다. 출처: 교육부 NEIS 교육정보 개방포털(시간표), 한국대학교육협의회 대입정보포털 및 각 대학 입학처(권장과목).</p>
+    <p>광고·추적·쿠키 없음 · <a href="https://github.com/Raonkim/hs-subject-match" id="repo" rel="noopener noreferrer">소스 코드와 데이터 출처</a></p>
+  </footer>
+</main>
+</body>
+</html>
