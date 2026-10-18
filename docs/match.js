@@ -77,8 +77,9 @@ export function shortfall(ev, taken, meta = new Map()) {
   const left = ev.subjects.filter((s) => !taken.has(s));
   if (ev.kind === 'all') return left.join('·');
   const more = ev.need - ev.have;
-  if (left.length <= 4) return `${left.join('·')} 중 ${more}과목 더`;
   const g = groupName(ev.subjects, meta);
+  // 묶음 이름(예: 과학 진로선택)이 없으면 무엇을 들어야 하는지 알 수 있게 과목명을 나열한다
+  if (left.length <= 4 || (!g && left.length <= 8)) return `${left.join('·')} 중 ${more}과목 더`;
   return `${g ?? `${ev.subjects.length}과목`} 중 ${more}과목 더`;
 }
 

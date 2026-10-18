@@ -109,6 +109,8 @@ test('부족한 과목 문장과 대학 비교 검색', async () => {
   assert.equal(shortfall(evaluateRule({ choose: 1, of: ['물리학', '화학'] }, taken), taken, meta), '물리학·화학 중 1과목 더');
   assert.equal(shortfall(evaluateRule({ choose: 3, of: sci }, taken), taken, meta), '과학 진로선택 중 2과목 더');
   assert.equal(shortfall(evaluateRule({ all: ['기하'] }, taken), taken, meta), null);
+  const mixed = ['물리학', '화학', '역학과 에너지', '전자기와 양자', '물질과 에너지', '화학 반응의 세계'];
+  assert.equal(shortfall(evaluateRule({ choose: 2, of: mixed }, taken), taken, meta), `${mixed.join('·')} 중 2과목 더`);
   const s = majorSummary({ core: [], recommended: [{ all: ['기하', '미적분Ⅱ'] }], note: '해석 확인 필요' }, taken, meta);
   assert.deepEqual([s.total, s.ok, s.short, s.caution], [1, 0, ['미적분Ⅱ'], true]);
   const dir = new URL('./data/universities/', import.meta.url);
