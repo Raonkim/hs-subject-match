@@ -34,3 +34,17 @@ input:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visibl
 .raw { margin: 12px 0; font-size: .92rem; color: var(--muted); }
 a { color: var(--accent); }
 footer { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 16px; font-size: .9rem; }
+.picker { display: grid; gap: 10px; }
+.picker .group { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.picker legend { font-size: .85rem; color: var(--muted); padding: 0 4px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-weight: 500; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.chip input { width: 18px; height: 18px; margin: 0; }
+.chip:has(input:checked) { border-color: var(--accent); background: var(--callout); }
+.results { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 8px; }
+.result { width: 100%; text-align: left; font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 4px; cursor: pointer; }
+.result:hover, .result:focus-visible { border-color: var(--accent); outline: none; }
+.result.ok { border-color: var(--ok); background: var(--okbg); }
+.r-name { font-weight: 700; }
+.r-line { font-size: .92rem; color: var(--muted); }
+.result .tag { justify-self: start; }
+button.secondary { font: inherit; padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); cursor: pointer; }

@@ -99,3 +99,28 @@ test('기본 학년도와 빈 결과 덮어쓰기 방지', async () => {
   assert.equal(shouldWrite({}, null), true);
   assert.equal(shouldWrite({ 기하: {} }, { subjects: { 대수: {} } }), true);
 });
+
+test('부족한 과목 문장과 대학 비교 검색', async () => {
+  const { shortfall, majorSummary, searchMajors, ruleSubjects, evaluateRule } = await import('./docs/match.js');
+  const meta = new Map(subjects.map((s) => [s.name, s]));
+  const sci = subjects.filter((s) => s.area === '과학' && s.type === '진로선택').map((s) => s.name);
+  const taken = new Set(['기하', sci[0]]);
+  assert.equal(shortfall(evaluateRule({ all: ['기하', '미적분Ⅱ'] }, taken), taken, meta), '미적분Ⅱ');
+  assert.equal(shortfall(evaluateRule({ choose: 1, of: ['물리학', '화학'] }, taken), taken, meta), '물리학·화학 중 1과목 더');
+  assert.equal(shortfall(evaluateRule({ choose: 3, of: sci }, taken), taken, meta), '과학 진로선택 중 2과목 더');
+  assert.equal(shortfall(evaluateRule({ all: ['기하'] }, taken), taken, meta), null);
+  const s = majorSummary({ core: [], recommended: [{ all: ['기하', '미적분Ⅱ'] }], note: '해석 확인 필요' }, taken, meta);
+  assert.deepEqual([s.total, s.ok, s.short, s.caution], [1, 0, ['미적분Ⅱ'], true]);
+  const dir = new URL('./data/universities/', import.meta.url);
+  const univs = readdirSync(dir).map((f) => JSON.parse(readFileSync(new URL(f, dir), 'utf8')));
+  const hits = searchMajors(univs, '컴퓨터');
+  assert.ok(hits.length >= 5 && new Set(hits.map((h) => h.univ.key)).size >= 4);
+  // 공통 기준 대학(한양대)은 검색어와 상관없이 결과 끝에 들어간다
+  assert.equal(hits[hits.length - 1].univ.key, 'hanyang');
+  assert.equal(hits[hits.length - 1].common, true);
+  assert.ok(searchMajors(univs, '없는학과이름').every((h) => h.common));
+  assert.ok(searchMajors(univs, '컴퓨터', 'yonsei').every((h) => h.univ.key === 'yonsei'));
+  assert.equal(searchMajors(univs, '의 예').length, searchMajors(univs, '의예').length);
+  const used = ruleSubjects(univs, subjects).map((x) => x.name);
+  assert.ok(used.includes('기하') && used.includes('미적분Ⅱ') && !used.includes('공통국어1'));
+});

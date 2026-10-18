@@ -63,3 +63,63 @@ export function unknownSubjects(university, subjects) {
   }
   return [...bad];
 }
+
+// 여러 과목이 같은 교과·유형이면 그 묶음 이름(예: "과학 진로선택")을 돌려준다.
+export function groupName(list, meta) {
+  const first = meta.get(list[0]);
+  if (!first) return null;
+  return list.every((s) => meta.get(s)?.area === first.area && meta.get(s)?.type === first.type) ? `${first.area} ${first.type}` : null;
+}
+
+// 충족하지 못한 규칙을 한 줄로. 예: "기하", "물리학·화학 중 1과목 더", "과학 진로선택 중 2과목 더"
+export function shortfall(ev, taken, meta = new Map()) {
+  if (ev.ok) return null;
+  const left = ev.subjects.filter((s) => !taken.has(s));
+  if (ev.kind === 'all') return left.join('·');
+  const more = ev.need - ev.have;
+  if (left.length <= 4) return `${left.join('·')} 중 ${more}과목 더`;
+  const g = groupName(ev.subjects, meta);
+  return `${g ?? `${ev.subjects.length}과목`} 중 ${more}과목 더`;
+}
+
+// 모집단위 하나의 요약: 규칙 수, 충족 수, 부족 목록, 해석 확인 필요 여부
+export function majorSummary(major, taken, meta = new Map()) {
+  const ev = evaluateMajor(major, taken);
+  const rules = [...ev.core, ...ev.recommended];
+  return {
+    total: rules.length,
+    ok: rules.filter((r) => r.ok).length,
+    short: rules.map((r) => shortfall(r, taken, meta)).filter(Boolean),
+    caution: Boolean(major.note && major.note.includes('확인 필요')),
+  };
+}
+
+// 모든 대학 규칙에 나오는 과목을 사전 순서(교과·유형)대로. 맨 위 체크리스트용.
+export function ruleSubjects(universities, subjects) {
+  const used = new Set();
+  for (const u of universities) for (const m of u.majors) for (const r of [...(m.core || []), ...(m.recommended || [])]) {
+    for (const s of r.all || r.of || []) used.add(s);
+  }
+  return subjects.filter((s) => used.has(s.name));
+}
+
+// 모집단위 구분 없이 계열 전체에 한 규칙을 쓰는 대학(예: 한양대 '자연계열 전 모집단위')
+export function isCommonStandard(university) {
+  return university.majors.length === 1 && university.majors[0].name.includes('전 모집단위');
+}
+
+// 학과 이름으로 모든 대학을 찾는다. 공백은 무시한다.
+// 공통 기준 대학은 학과 이름이 없으므로, 검색어와 상관없이 결과 끝에 넣는다(common: true).
+export function searchMajors(universities, query, univKey = '') {
+  const q = String(query).replace(/\s+/g, '');
+  const out = [];
+  const common = [];
+  for (const u of universities) {
+    if (univKey && u.key !== univKey) continue;
+    if (isCommonStandard(u)) { common.push({ univ: u, major: u.majors[0], index: 0, common: true }); continue; }
+    u.majors.forEach((m, i) => {
+      if (!q || m.name.replace(/\s+/g, '').includes(q)) out.push({ univ: u, major: m, index: i });
+    });
+  }
+  return [...out, ...common];
+}
