@@ -37,6 +37,8 @@ jobs:
           REGION: ${{ github.event.inputs.region }}
           LIMIT: ${{ github.event.inputs.limit || '0' }}
         run: |
+          # 키를 아직 넣지 않았으면 실패 대신 건너뛴다(예약 실행마다 실패 메일이 가지 않게)
+          if [ -z "$NEIS_API_KEY" ]; then echo "::notice::NEIS_API_KEY가 없어 학교 시간표 수집을 건너뜁니다."; exit 0; fi
           ARGS=(--limit "$LIMIT")  # 학년도는 스크립트가 날짜로 정한다(1~4월 중순은 지난 학년도)
           if [ -n "$REGION" ]; then ARGS+=(--region "$REGION"); fi
           node tools/build_schools.mjs "${ARGS[@]}"
